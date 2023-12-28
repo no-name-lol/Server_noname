@@ -13,7 +13,7 @@ export class AppController {
   }
 
   @Get('test')
-  test(): string {
-    return 'test';
+  test() {
+    return this.appService.test();
   }
 }

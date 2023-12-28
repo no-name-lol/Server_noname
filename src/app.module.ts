@@ -4,16 +4,20 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CustomResponseInterceptor } from 'common/interceptors/response.interceptor';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PrismaModule } from './prisma/prisma.module';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
+    PrismaService,
     {
       provide: APP_INTERCEPTOR,
       useClass: CustomResponseInterceptor,

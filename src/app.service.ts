@@ -7,8 +7,4 @@ export class AppService {
   healthCheck(): void {
     return;
   }
-
-  test() {
-    return this.prisma.user.findMany();
-  }
 }

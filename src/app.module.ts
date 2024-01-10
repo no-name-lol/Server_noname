@@ -7,6 +7,8 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { PrismaService } from './prisma/prisma.service';
 import { CommentsModule } from './comments/comments.module';
+import { ShortsModule } from './shorts/shorts.module';
+import { FollowerModule } from './follower/follower.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { CommentsModule } from './comments/comments.module';
     }),
     PrismaModule,
     CommentsModule,
+    ShortsModule,
+    FollowerModule,
   ],
   controllers: [AppController],
   providers: [

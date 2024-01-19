@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,31 +5,55 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.Timestamp(0)
-  content   String?  @db.Text
-  published Boolean  @default(false)
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Post_ibfk_1")
+model comments {
+  commentId Int      @id @default(autoincrement())
+  content   String   @db.VarChar(255)
+  shortsId  Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  shorts    shorts   @relation(fields: [shortsId], references: [shortsId], map: "Comments_shortsId_fkey")
+  users     users    @relation(fields: [userId], references: [userId], map: "Comments_userId_fkey")
 
-  @@index([authorId], map: "authorId")
+  @@index([shortsId], map: "Comments_shortsId_fkey")
+  @@index([userId], map: "Comments_userId_fkey")
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String? @db.Text
-  userId Int     @unique(map: "userId")
-  user   User    @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "Profile_ibfk_1")
+model follow {
+  followId     Int      @id @default(autoincrement())
+  followUserId Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  userId       Int
+  users        users    @relation(fields: [userId], references: [userId], map: "Follow_userId_fkey")
+
+  @@index([userId], map: "Follow_userId_fkey")
 }
 
-model User {
-  id      Int      @id @default(autoincrement())
-  name    String?  @db.VarChar(255)
-  email   String   @unique(map: "email") @db.VarChar(255)
-  posts   Post[]
-  profile Profile?
+model shorts {
+  shortsId  Int        @id @default(autoincrement())
+  title     String     @db.VarChar(255)
+  videoUrl  String     @db.VarChar(255)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  userId    Int
+  comments  comments[]
+  users     users      @relation(fields: [userId], references: [userId], map: "Shorts_userId_fkey")
+
+  @@index([userId], map: "Shorts_userId_fkey")
+}
+
+model users {
+  userId    Int        @id @default(autoincrement())
+  nickName  String?    @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  email     String     @unique(map: "email") @db.VarChar(255)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  comments  comments[]
+  follow    follow[]
+  shorts    shorts[]
 }
